@@ -12,7 +12,7 @@ CORS(app)
 
 @app.route('/')
 def index():
-    return "Hello, World!"
+    return "Welcome :)"
 
 
 @app.route('/torrents/search')

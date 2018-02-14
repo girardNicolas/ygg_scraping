@@ -58,48 +58,48 @@ def search(search_parameters):
     :rtype: [Torrent]
     :type search_parameters: SearchParameters
     """
-    if search_parameters.all_none():
-        return []
+    connection = sqlite3.connect(config.database_path)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+
+    # Build request
+    request = 'SELECT t.ID AS YGG_ID, m.id AS METRIC_ID, * FROM TORRENTS t, METRICS m WHERE t.ID = m.TORRENT_ID '
+    request_params = ()
+
+    # NAME
+    if search_parameters.name:
+        request += 'AND t.NAME=? '
+        request_params += (search_parameters.name,)
+
+    # CATEGORY
+    if search_parameters.category:
+        request += 'AND t.CATEGORY=? '
+        request_params += (search_parameters.category,)
+
+    # ORDER
+    if search_parameters.order and is_tolerate_order_value(search_parameters.order):
+        request += 'ORDER BY {} '.format(search_parameters.order)
+
+    # LIMIT
+    if search_parameters.limit:
+        limit = search_parameters.limit
     else:
-        connection = sqlite3.connect(config.database_path)
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
+        limit = config.default_limit_result
+    request += 'LIMIT ? '
+    request_params += (limit,)
 
-        # Build request
-        request = 'SELECT t.ID AS YGG_ID, m.id AS METRIC_ID, * FROM TORRENTS t, METRICS m WHERE t.ID = m.TORRENT_ID '
-        request_params = ()
+    # SKIP
+    if search_parameters.skip:
+        skip = search_parameters.skip
+    else:
+        skip = config.default_skip_result
+    request += 'OFFSET ?'
+    request_params += (skip,)
 
-        # NAME
-        if search_parameters.name:
-            request += 'AND t.NAME=? '
-            request_params += (search_parameters.name,)
-
-        # CATEGORY
-        if search_parameters.category:
-            request += 'AND t.CATEGORY=? '
-            request_params += (search_parameters.category,)
-
-        # ORDER
-        if search_parameters.order and is_tolerate_order_value(search_parameters.order):
-            request += 'ORDER BY {} '.format(search_parameters.order)
-
-        # LIMIT
-        if search_parameters.limit:
-            limit = search_parameters.limit
-        else:
-            limit = config.default_limit_result
-        request += 'LIMIT ? '
-        request_params += (limit,)
-
-        # SKIP
-        if search_parameters.skip:
-            request += 'OFFSET ?'
-            request_params += (search_parameters.skip,)
-
-        cursor.execute(request, request_params)
-        torrents = convert_rows_result_to_torrents_list(cursor)
-        connection.close()
-        return torrents
+    cursor.execute(request, request_params)
+    torrents = convert_rows_result_to_torrents_list(cursor)
+    connection.close()
+    return torrents
 
 
 def is_tolerate_order_value(order_value):
