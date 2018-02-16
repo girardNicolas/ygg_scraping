@@ -1,4 +1,5 @@
 import sqlite3
+
 import config
 import constants
 from db.entities import SearchParameters, Torrent, Metric
@@ -28,8 +29,9 @@ def insert_new_torrent_line(torrent, connection):
         ratio = torrent.leechers_number / torrent.seeders_number
     else:
         ratio = 0
-    cursor.execute('INSERT INTO METRICS (SCRAPING_DATE, SEEDERS_NUMBER, LEECHERS_NUMBER, RATIO, TORRENT_ID) VALUES(?, ?, ?, ?, ?)',
-                   (torrent.scrap_date, torrent.seeders_number, torrent.leechers_number, ratio, ygg_id))
+    cursor.execute(
+        'INSERT INTO METRICS (SCRAPING_DATE, SEEDERS_NUMBER, LEECHERS_NUMBER, RATIO, TORRENT_ID) VALUES(?, ?, ?, ?, ?)',
+        (torrent.scrap_date, torrent.seeders_number, torrent.leechers_number, ratio, ygg_id))
     connection.commit()
 
 
@@ -43,7 +45,8 @@ def insert_new_torrents_lines(torrents):
 def set_dead_torrents_in_category(all_torrents_in_category, category):
     connection = sqlite3.connect(config.database_path)
     ygg_id_list = [str(torrent.ygg_id) for torrent in all_torrents_in_category]
-    request = 'UPDATE TORRENTS SET ALIVE = 0 WHERE CATEGORY = ? AND ALIVE = 1 AND ID NOT IN ({})'.format(','.join(ygg_id_list))
+    request = 'UPDATE TORRENTS SET ALIVE = 0 WHERE CATEGORY = ? AND ALIVE = 1 AND ID NOT IN ({})'.format(
+        ','.join(ygg_id_list))
     cursor = connection.cursor()
     cursor.execute(request, (category.name,))
     connection.commit()
@@ -63,29 +66,35 @@ def search(search_parameters):
     cursor = connection.cursor()
 
     # Build request
-    request = 'SELECT t.ID AS YGG_ID, m.id AS METRIC_ID, * FROM TORRENTS t, METRICS m WHERE t.ID = m.TORRENT_ID '
+    request = 'SELECT t.ID AS YGG_ID, m.id AS METRIC_ID, * FROM ({}) t, METRICS m WHERE t.ID = m.TORRENT_ID '
+    sub_request = 'SELECT * FROM TORRENTS '
+    need_where_clause_in_sub_request = search_parameters.name or search_parameters.category
+    if need_where_clause_in_sub_request:
+        sub_request += 'WHERE '
     request_params = ()
 
     # NAME
     if search_parameters.name:
-        request += 'AND t.NAME=? '
+        sub_request += 't.NAME=? '
         request_params += (search_parameters.name,)
 
     # CATEGORY
     if search_parameters.category:
-        request += 'AND t.CATEGORY=? '
+        if search_parameters.name:
+            sub_request += 'AND '
+        sub_request += 't.CATEGORY=? '
         request_params += (search_parameters.category,)
 
     # ORDER
     if search_parameters.order and is_tolerate_order_value(search_parameters.order):
-        request += 'ORDER BY {} '.format(search_parameters.order)
+        sub_request += 'ORDER BY {} '.format(search_parameters.order)
 
     # LIMIT
     if search_parameters.limit:
         limit = search_parameters.limit
     else:
         limit = config.default_limit_result
-    request += 'LIMIT ? '
+    sub_request += 'LIMIT ? '
     request_params += (limit,)
 
     # SKIP
@@ -93,9 +102,10 @@ def search(search_parameters):
         skip = search_parameters.skip
     else:
         skip = config.default_skip_result
-    request += 'OFFSET ?'
+    sub_request += 'OFFSET ?'
     request_params += (skip,)
 
+    request = request.format(sub_request)
     cursor.execute(request, request_params)
     torrents = convert_rows_result_to_torrents_list(cursor)
     connection.close()
