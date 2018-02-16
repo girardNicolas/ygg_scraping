@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 
-import config
+from settings import config
 import json
 from db import dao
 from db.entities import SearchParameters, Torrent, Metric

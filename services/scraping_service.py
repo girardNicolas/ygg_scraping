@@ -1,12 +1,8 @@
 import logging
-import constants
+from settings import constants
 from db.entities import TorrentLine
 import re
-
-try:
-    from BeautifulSoup import BeautifulSoup
-except ImportError:
-    from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 
 
 def get_result_number(html):

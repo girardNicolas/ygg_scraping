@@ -1,7 +1,6 @@
 import sqlite3
 
-import config
-import constants
+from settings import config, constants
 from db.entities import SearchParameters, Torrent, Metric
 
 

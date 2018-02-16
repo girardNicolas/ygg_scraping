@@ -2,8 +2,7 @@ import logging
 import time
 import requests
 from services import scraping_service
-import config
-import constants
+from settings import config, constants
 from db import dao
 
 logging.basicConfig(filename=config.log_file, level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s',
