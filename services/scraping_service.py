@@ -3,7 +3,6 @@ from settings import constants
 from db.entities import TorrentLine
 import re
 from bs4 import BeautifulSoup
-from os.path import normpath
 
 
 def get_result_number(html):
