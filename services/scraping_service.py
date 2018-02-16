@@ -3,6 +3,7 @@ from settings import constants
 from db.entities import TorrentLine
 import re
 from bs4 import BeautifulSoup
+from os.path import normpath
 
 
 def get_result_number(html):
@@ -41,13 +42,17 @@ def get_sub_category_from_torrent_page(torrent_page):
     return torrent_page.split('/')[constants.YGG_SUB_CATEGORY_TORRENT_PAGE_INDEX]
 
 
+def sanitize_torrent_name(name):
+    return re.sub('^\s*|\s*$', '', name)
+
+
 def get_torrent(tr, category):
     index = 0
     name, size, nb_seeders, ygg_id, nb_leechers, torrent_page, sub_category = None, None, None, None, None, None, None
     for td in tr.findAll('td'):
         if index == 0:
             a = td.find('a')
-            name = a.text
+            name = sanitize_torrent_name(a.text)
             torrent_page = a.attrs['href']
             ygg_id = get_id_from_torrent_page(torrent_page)
             sub_category = get_sub_category_from_torrent_page(torrent_page)
