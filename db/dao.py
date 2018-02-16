@@ -74,14 +74,14 @@ def search(search_parameters):
 
     # NAME
     if search_parameters.name:
-        sub_request += 't.NAME=? '
+        sub_request += 'NAME=? '
         request_params += (search_parameters.name,)
 
     # CATEGORY
     if search_parameters.category:
         if search_parameters.name:
             sub_request += 'AND '
-        sub_request += 't.CATEGORY=? '
+        sub_request += 'CATEGORY=? '
         request_params += (search_parameters.category,)
 
     # ORDER
