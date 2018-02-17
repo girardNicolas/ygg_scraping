@@ -1,4 +1,5 @@
 import datetime
+from settings import constants
 from enum import Enum
 
 
@@ -49,6 +50,17 @@ class Torrent:
         self.sub_category = sub_category
         self.alive = alive
         self.metrics_list = metrics_list
+
+    def get_torrent_page_link(self):
+        def convert_category_part_for_url(cat):
+            return cat.strip('_').lower()
+        category = convert_category_part_for_url(self.category)
+        sub_category = convert_category_part_for_url(self.sub_category)
+        name = self.name.replace(' ', '+').lower()
+        return '{}{}/{}/{}-{}'.format(constants.YGG_TORRENTS_ROOT_URL, category, sub_category, self.ygg_id, name)
+
+    def get_direct_link_download(self):
+        return '{}?{}={}'.format(constants.YGG_TORRENTS_ROOT_DOWNLOAD_URL, constants.ID_PARAM_URL, self.ygg_id)
 
 
 class Metric:

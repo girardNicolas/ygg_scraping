@@ -1,7 +1,7 @@
 from db.entities import Category
 
 YYG_TORRENT_SITE = 'https://yggtorrent.com/'
-YGG_TORRENTS_ROOT_URL = YYG_TORRENT_SITE + 'torrents/'
+YGG_TORRENTS_ROOT_URL = YYG_TORRENT_SITE + 'torrent/'
 YGG_TORRENTS_ROOT_DOWNLOAD_URL = YYG_TORRENT_SITE + 'engine/download_torrent'
 YGG_SUB_CATEGORY_TORRENT_PAGE_INDEX = 5
 FILM_CATEGORY = '2145-filmvidéo'
