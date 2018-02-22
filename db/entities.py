@@ -1,6 +1,7 @@
 import datetime
-from settings import constants
 from enum import Enum
+
+from settings import constants
 
 
 class TorrentLine:
@@ -57,7 +58,7 @@ class Torrent:
         category = convert_category_part_for_url(self.category)
         sub_category = convert_category_part_for_url(self.sub_category)
         name = self.name.replace(' ', '+').lower()
-        return '{}{}/{}/{}-{}'.format(constants.YGG_TORRENTS_ROOT_URL, category, sub_category, self.ygg_id, name)
+        return '{}{}/{}/{}-{}'.format(constants.YGG_TORRENT_PAGE_ROOT_URL, category, sub_category, self.ygg_id, name)
 
     def get_direct_link_download(self):
         return '{}?{}={}'.format(constants.YGG_TORRENTS_ROOT_DOWNLOAD_URL, constants.ID_PARAM_URL, self.ygg_id)
