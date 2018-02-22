@@ -1,5 +1,3 @@
-from db.entities import Category
-
 YYG_TORRENT_SITE = 'https://yggtorrent.com/'
 YGG_TORRENT_PAGE_ROOT_URL = YYG_TORRENT_SITE + 'torrent/'
 YGG_TORRENTS_ROOT_URL = YYG_TORRENT_SITE + 'torrents/'
@@ -22,6 +20,12 @@ KB_KEY_WORD = 'kB'
 B_KEY_WORD = 'B'
 
 
+class Category:
+    def __init__(self, name, id_url):
+        self.name = name
+        self.id_url = id_url
+
+
 CATEGORIES_LIST = [Category('GPS', GPS_CATEGORY),
                    Category('AUDIO', AUDIO_CATEGORY),
                    Category('APPLICATION', APPLICATION_CATEGORY),
@@ -32,3 +36,4 @@ CATEGORIES_LIST = [Category('GPS', GPS_CATEGORY),
 
 # REST API
 VALID_ORDER_VALUE = {'SIZE', 'NAME', 'CATEGORY'}
+

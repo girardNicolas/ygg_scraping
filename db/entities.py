@@ -21,12 +21,6 @@ class TorrentLine:
         self.ygg_id = ygg_id
 
 
-class Category:
-    def __init__(self, name, id_url):
-        self.name = name
-        self.id_url = id_url
-
-
 class SearchParameters:
     def __init__(self, name=None, category=None, order=None, skip=None, limit=None):
         self.name = name
