@@ -6,7 +6,7 @@ from services import rest_service, scraping_service
 from settings import config
 
 logging.basicConfig(filename=config.log_file, level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s',
-                    datefmt='%m/%d/%Y %H:%M:%S')
+                    datefmt='%d/%m/%Y %H:%M:%S')
 
 
 def usage():
