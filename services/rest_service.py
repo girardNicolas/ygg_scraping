@@ -1,10 +1,11 @@
+import json
+
 from flask import Flask, request
 from flask_cors import CORS
 
-from settings import config
-import json
 from db import dao
 from db.entities import SearchParameters, Torrent, Metric
+from settings import config, constants
 
 app = Flask(__name__)
 CORS(app)
@@ -22,8 +23,9 @@ def search():
     order = request.args.get('order', None)
     skip = request.args.get('skip', '')
     limit = request.args.get('limit', '')
+    sort_mode = request.args.get('sort_mode', constants.ASC_SORT_ORDER)
     search_parameters = SearchParameters(name, category, order, skip if skip.isdigit() else None,
-                                         limit if limit.isdigit() else None)
+                                         limit if limit.isdigit() else None, sort_mode)
     results = dao.search(search_parameters)
     return json.dumps(results, cls=TorrentsListJSONEncoder)
 

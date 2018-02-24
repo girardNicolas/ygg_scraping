@@ -22,12 +22,13 @@ class TorrentLine:
 
 
 class SearchParameters:
-    def __init__(self, name=None, category=None, order=None, skip=None, limit=None):
+    def __init__(self, name=None, category=None, order=None, skip=None, limit=None, sort_mode=None):
         self.name = name
         self.category = category
         self.order = order
         self.skip = skip
         self.limit = limit
+        self.sort_mode = sort_mode
 
     def all_none(self):
         for attr_value in self.__dict__.values():

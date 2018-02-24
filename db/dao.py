@@ -86,7 +86,14 @@ def search(search_parameters):
 
     # ORDER
     if search_parameters.order and is_tolerate_order_value(search_parameters.order):
-        sub_request += 'ORDER BY {} '.format(search_parameters.order)
+        order_by_criteria = 'ORDER BY {} '
+        sub_request += order_by_criteria.format(search_parameters.order)
+        request += order_by_criteria.format(search_parameters.order)
+
+        # SORT
+        if search_parameters.sort_mode and is_tolerate_sort_value(search_parameters.sort_mode):
+            sub_request += search_parameters.sort_mode + " "
+            request += search_parameters.sort_mode + " "
 
     # LIMIT
     if search_parameters.limit:
@@ -112,10 +119,11 @@ def search(search_parameters):
 
 
 def is_tolerate_order_value(order_value):
-    if order_value not in constants.VALID_ORDER_VALUE:
-        return False
-    else:
-        return True
+    return order_value in constants.VALID_ORDER_VALUE
+
+
+def is_tolerate_sort_value(sort_value):
+    return sort_value in constants.VALID_SORT_ORDER_VALUE
 
 
 def convert_rows_result_to_torrents_list(cursor):
