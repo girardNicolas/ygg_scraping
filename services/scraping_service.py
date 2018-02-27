@@ -22,7 +22,9 @@ def convert_size_in_byte(size_str):
 
     :type size_str: str
     """
-    if size_str.find(constants.GB_KEY_WORD) != -1:
+    if size_str.find(constants.TB_KEY_WORD) != -1:
+        return float(size_str.strip(constants.TB_KEY_WORD)) * 1099511627776
+    elif size_str.find(constants.GB_KEY_WORD) != -1:
         return float(size_str.strip(constants.GB_KEY_WORD)) * 1073741824
     elif size_str.find(constants.MB_KEY_WORD) != -1:
         return float(size_str.strip(constants.MB_KEY_WORD)) * 1024
