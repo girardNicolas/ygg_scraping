@@ -16,6 +16,7 @@ ID_PARAM_URL = 'id'
 
 MB_KEY_WORD = 'MB'
 GB_KEY_WORD = 'GB'
+TB_KEY_WORD = 'TB'
 KB_KEY_WORD = 'kB'
 B_KEY_WORD = 'B'
 
