@@ -37,7 +37,8 @@ def results_to_json(results):
 def start_api():
     app.config.update(
         DEBUG=config.rest_api_debug,
-        APPLICATION_ROOT='torrents'
+        APPLICATION_ROOT='torrents',
+        host=config.host
     )
     app.run()
 
